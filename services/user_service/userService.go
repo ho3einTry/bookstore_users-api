@@ -3,27 +3,46 @@ package user_service
 import (
 	"github.com/ho3einTry/bookstore_users-api/dto"
 	"github.com/ho3einTry/bookstore_users-api/exceptions"
+	"github.com/ho3einTry/bookstore_users-api/repositories"
 	"github.com/ho3einTry/bookstore_users-api/viewModel"
 )
+
+var userRepository repositories.IUserRepository = &repositories.UserRepository{}
 
 type UserService struct {
 }
 
 func (us *UserService) GetUser(id *int64) (*viewModel.UserDto, *exceptions.AppException) {
 
-	panic("implement me")
+	panic(id)
 }
 
-func (us *UserService) CreateUser(userDto *dto.UserDto) (*viewModel.UserDto, *exceptions.AppException) {
+func (us *UserService) CreateUser(userDto *dto.UserDto) (int64, *exceptions.AppException) {
 
 	//todo validation
 
-	//todo call repository
+	//todo call find repository
+	user, err := userRepository.Find(&userDto.Email)
+	if err != nil {
+		//appErr := exceptions.NewAppException("db_error_user_find", "an error occurred inside user repository find method")
+		return 0, err
+	}
+	if user != nil {
+		err := exceptions.NewAppException("user_already_exists", "user is already exists")
+		return 0, &err
+	}
+
+	//todo map user dto to user
+	user = userDto.ToUser()
+	//todo call Create repository
+
+	userRepository.Create(user)
 
 	//todo map user to user view model
 
 	//todo return view model
-	panic("implement me")
+	r := exceptions.NewAppException("", "")
+	return 0, &r
 }
 
 func (us *UserService) UpdateUser() {

@@ -8,7 +8,7 @@ import (
 
 type IUserService interface {
 	GetUser(id *int64) (*viewModel.UserDto, *exceptions.AppException)
-	CreateUser(userDto *dto.UserDto) (*viewModel.UserDto, *exceptions.AppException)
+	CreateUser(userDto *dto.UserDto) (int64, *exceptions.AppException)
 	UpdateUser()
 	DeleteUser()
 	SearchUser()

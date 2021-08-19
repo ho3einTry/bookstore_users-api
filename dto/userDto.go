@@ -23,14 +23,31 @@ type UserDto struct {
 	Password    string           `json:"password,omitempty"`
 }
 
+func (ud *UserDto) ToUser() *domain.User {
+	return &domain.User{
+		Id:          ud.Id,
+		FirstName:   ud.FirstName,
+		LastName:    ud.LastName,
+		Email:       ud.Email,
+		Addresses:   ud.Addresses,
+		DateCreated: ud.DateCreated,
+		Status:      ud.Status,
+		Password:    ud.Password,
+	}
+}
+
+//func (ud *domain.User) FromUser()  *UserDto {
+//
+//}
+
 func (ud UserDto) Validate() error {
 	err := validation.ValidateStruct(&ud,
 		validation.Field(&ud.Id, is.Digit),
 		validation.Field(&ud.FirstName, validation.Required, validation.Length(3, 20)),
 		validation.Field(&ud.LastName, validation.Required, validation.Length(3, 20)),
 		validation.Field(&ud.Email, validation.Required, is.Email),
-		validation.Field(&ud.Addresses, validation.Required),
-		validation.Field(&ud.DateCreated, validation.Date("YYYY-mm-dd")),
+		validation.Field(&ud.Addresses),
+		validation.Field(&ud.DateCreated, validation.Date("YYYY-MM-DD")),
 		validation.Field(&ud.Status, validation.Match(regexp.MustCompile(statusRegex))),
 		//validation.Field(ud.Password, validation.Match(regexp.MustCompile(passwordRegex))),
 

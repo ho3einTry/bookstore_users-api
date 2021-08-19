@@ -7,7 +7,7 @@ import (
 	"github.com/ho3einTry/bookstore_users-api/services/user_service"
 )
 
-var UserService user_service.IUserService = &user_service.UserService{}
+var userService user_service.IUserService = &user_service.UserService{}
 
 func Add(c *gin.Context) {
 	var userDto dto.UserDto
@@ -18,12 +18,13 @@ func Add(c *gin.Context) {
 	}
 
 	if err := userDto.Validate(); err != nil {
-		//b,_:=json.Marshal(err)
-		//err:=exceptions.NewAppException("bad_request",string(b))
 		c.JSON(400, err)
 	}
 
-	//UserService.CreateUser()
+	id, _ := userService.CreateUser(&userDto)
+
+	c.JSON(400, id)
+
 }
 func Update(c *gin.Context) {}
 func Delete(c *gin.Context) {}
