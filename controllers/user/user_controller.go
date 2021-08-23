@@ -21,9 +21,11 @@ func Add(c *gin.Context) {
 		c.JSON(400, err)
 	}
 
-	id, _ := userService.CreateUser(&userDto)
-
-	c.JSON(400, id)
+	id, err := userService.CreateUser(&userDto)
+	if err != nil {
+		c.JSON(400, err.Message)
+	}
+	c.JSON(200, id)
 
 }
 func Update(c *gin.Context) {}

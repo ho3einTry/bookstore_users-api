@@ -34,15 +34,13 @@ func (us *UserService) CreateUser(userDto *dto.UserDto) (int64, *exceptions.AppE
 
 	//todo map user dto to user
 	user = userDto.ToUser()
-	//todo call Create repository
 
-	userRepository.Create(user)
+	userId, err := userRepository.Create(user)
+	if err != nil {
+		return 0, err
+	}
 
-	//todo map user to user view model
-
-	//todo return view model
-	r := exceptions.NewAppException("", "")
-	return 0, &r
+	return userId, nil
 }
 
 func (us *UserService) UpdateUser() {

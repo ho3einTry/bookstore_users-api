@@ -1,8 +1,8 @@
 package main
 
-import users_db "github.com/ho3einTry/bookstore_users-api/data_sources/mysql"
+import "github.com/ho3einTry/bookstore_users-api/app"
 
 func main() {
-	users_db.Init()
-	//app.StartApplication()
+	//users_db.Init()
+	app.StartApplication()
 }
