@@ -12,9 +12,17 @@ var userRepository repositories.IUserRepository = &repositories.UserRepository{}
 type UserService struct {
 }
 
-func (us *UserService) GetUser(id *int64) (*viewModel.UserDto, *exceptions.AppException) {
+func (us *UserService) GetUser(id *int64) (userDto *viewModel.UserDto, except *exceptions.AppException) {
 
-	panic(id)
+	user, err := userRepository.Get(id)
+	if err != nil {
+		return nil, err
+	}
+	var ud viewModel.UserDto
+	ud.FromUser(user)
+
+	return &ud, nil
+
 }
 
 func (us *UserService) CreateUser(userDto *dto.UserDto) (int64, *exceptions.AppException) {
@@ -23,10 +31,7 @@ func (us *UserService) CreateUser(userDto *dto.UserDto) (int64, *exceptions.AppE
 
 	//todo call find repository
 	user, err := userRepository.Find(&userDto.Email)
-	if err != nil {
-		//appErr := exceptions.NewAppException("db_error_user_find", "an error occurred inside user repository find method")
-		return 0, err
-	}
+
 	if user != nil {
 		err := exceptions.NewAppException("user_already_exists", "user is already exists")
 		return 0, &err

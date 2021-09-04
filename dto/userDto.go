@@ -47,7 +47,8 @@ func (ud UserDto) Validate() error {
 		validation.Field(&ud.LastName, validation.Required, validation.Length(3, 20)),
 		validation.Field(&ud.Email, validation.Required, is.Email),
 		validation.Field(&ud.Addresses),
-		validation.Field(&ud.DateCreated, validation.Date("YYYY-MM-DD")),
+		//validation.Field(&ud.DateCreated, validation.Date("YYYY-MM-DD")),
+		validation.Field(&ud.DateCreated),
 		validation.Field(&ud.Status, validation.Match(regexp.MustCompile(statusRegex))),
 		//validation.Field(ud.Password, validation.Match(regexp.MustCompile(passwordRegex))),
 

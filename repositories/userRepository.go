@@ -41,7 +41,7 @@ func (ur *UserRepository) Create(user *domain.User) (int64, *exceptions.AppExcep
 	}
 	return userId, nil
 }
-func (ur *UserRepository) Get(id *int64) (*domain.User, *exceptions.AppException) {
+func (ur *UserRepository) Get(id *int64) (user *domain.User, except *exceptions.AppException) {
 	statement, err := users_db.Client.Prepare(queryGetUser)
 	if err != nil {
 		Logger.Error("error when trying to prepare get user statement", err)
@@ -52,21 +52,21 @@ func (ur *UserRepository) Get(id *int64) (*domain.User, *exceptions.AppException
 	defer statement.Close()
 
 	result := statement.QueryRow(id)
-	var user domain.User
+	var u domain.User
 	if getErr := result.Scan(
-		user.Id,
-		user.FirstName,
-		user.LastName,
-		user.Email,
-		user.DateCreated,
-		user.Status,
-		user.Password,
+		&u.Id,
+		&u.FirstName,
+		&u.LastName,
+		&u.Email,
+		&u.DateCreated,
+		&u.Status,
+		&u.Password,
 	); getErr != nil {
 		Logger.Error("error when trying to get user by id", getErr)
 		exception := exceptions.NewAppException("db_error", "error accrued on get user repository")
 		return nil, &exception
 	}
-	return &user, nil
+	return &u, nil
 }
 func (ur *UserRepository) Find(email *string) (*domain.User, *exceptions.AppException) {
 	statement, err := users_db.Client.Prepare(queryFindByEmail)
@@ -79,13 +79,13 @@ func (ur *UserRepository) Find(email *string) (*domain.User, *exceptions.AppExce
 	result := statement.QueryRow(&email)
 	var user domain.User
 	if getErr := result.Scan(
-		user.Id,
-		user.FirstName,
-		user.LastName,
-		user.Email,
-		user.DateCreated,
-		user.Status,
-		user.Password,
+		&user.Id,
+		&user.FirstName,
+		&user.LastName,
+		&user.Email,
+		&user.DateCreated,
+		&user.Status,
+		&user.Password,
 	); getErr != nil {
 		Logger.Error("error when trying to get user by email", getErr)
 		exception := exceptions.NewAppException("db_error", "error when tying to find user")
